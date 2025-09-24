@@ -1,7 +1,3 @@
-# Skincare Sales Data Exploratory Analysis (EDA)
-
----
-
 ## Project Overview
 
 This project showcases an Exploratory Data Analysis (EDA) performed on a skincare sales dataset. The main goal was to uncover key insights into sales performance, profitability, customer behavior, and geographical market trends. By leveraging SQL queries, this analysis aims to identify strengths, weaknesses, and potential areas for strategic improvement within the business.
