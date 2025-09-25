@@ -36,6 +36,7 @@ The dataset, named `Skin_Care Target.csv`, contains transactional sales data. He
 * Total Products Sold: 6,388
 * Total Categories Analyzed: 5
 * Total Subcategories Analyzed: 17
+
 ---
 
 ### Key Findings
