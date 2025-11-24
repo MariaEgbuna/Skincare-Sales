@@ -2,42 +2,23 @@
 
 This project showcases an Exploratory Data Analysis (EDA) performed on a skincare sales dataset. The main goal was to uncover key insights into sales performance, profitability, customer behavior, and geographical market trends. By leveraging SQL queries, this analysis aims to identify strengths, weaknesses, and potential areas for strategic improvement within the business.
 
----
-
-## Dataset Description
-
-The dataset, named `Skin_Care Target.csv`, contains transactional sales data. Here are the key columns:
-
-* **`order_id`**: Unique identifier for each transaction line item.
-* **`product`**: Name of the product sold.
-* **`category`**: Product category (e.g., 'Body care', 'Make up').
-* **`subcategory`**: More specific product grouping (e.g., 'fragrances', 'Nail care products').
-* **`sales`**: Revenue generated from the transaction.
-* **`profit`**: Profit generated from the transaction.
-* **`quantity`**: Number of units sold.
-* **`discount`**: Discount applied to the transaction line item (numeric, e.g., 0.10 for 10%).
-* **`order_date`**: Date of the order.
-* **`customer_id`**: Unique identifier for the customer.
-* **`segment`**: Customer segment (e.g., 'Consumer', 'Corporate').
-* **`city`, `state`, `country`, `market`**: Geographical information.
-
----
+***
 
 ## Tools Used
 
 * **Excel**: For standardizing the data and removing duplicates.
 * **PostgreSQL**: Database system used for storing and querying the data.
 
----
+***
+
 ### General Metrics
+
 * Total Revenue (2022-2024): $1,770,778
 * Total Profit (Gross): $318,675
 * Total Net Profit After Discounts: $60,004
 * Total Products Sold: 6,388
 * Total Categories Analyzed: 5
 * Total Subcategories Analyzed: 17
-
----
 
 ### Key Findings
 
@@ -122,24 +103,14 @@ ORDER BY st.customer_id, total_qty_bought DESC;
 ***
 ![Top Customers frequent purchases](Images/CustomerPurchase.png)
 
+***
+
 ### Conclusion
 
 The business's failure was twofold: a sudden cessation of operations in the second half of 2024, preceded by a severe profitability crisis in the first half of the year. This crisis was driven by a collapsing customer base and a flawed, geographically inconsistent discounting strategy.
-
-***
 
 ### Recommendations
 
 1.  **Investigate the Operational Halt**: The primary recommendation is to determine the cause of the sudden stop in sales after July 2024.
 2.  **Adjust Pricing Strategy**: If operations were to resume, a complete overhaul of the pricing and discounting strategy would be necessary. This includes eliminating aggressive discounts on unprofitable products, especially in high-loss markets like Turkey and Indonesia.
 3.  **Rebuild Customer Base**: A new strategy would be needed to attract and retain customers, as the business was losing a significant portion of its customer base even before the operational halt.
-    
-### How to Replicate This Analysis
-
-To run this analysis on your own:
-
-1.  **PostgreSQL Database:** Ensure you have a PostgreSQL database set up.
-2.  **Load Data:** Import your `Skin_Care Target.csv` dataset into a table named `skincare_target` in your PostgreSQL database.
-3.  **Execute Queries:** Use a SQL client (like psql, DBeaver, PgAdmin, or VS Code with a PostgreSQL extension) to connect to your database. Then, execute the SQL queries provided in the [`Skincare_Sales_EDA.sql`](Skincare_Sales_EDA.sql) file.
-
----
