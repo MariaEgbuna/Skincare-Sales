@@ -86,13 +86,13 @@ The analysis indicates the overall profit margin (18.00%) is severely suppressed
 
 ## Recommendations: Profitability and Strategy
 
-## 1. Immediate Profit Recovery (Pricing Control)
+### 1. Immediate Profit Recovery (Pricing Control)
 
 * **Discount Leakage Stop:** Eliminate all discounts above 30%. This threshold is non-negotiable as the High Discount bracket currently operates at a **-20.65% net loss**.
 * **Product Profit Floor:** Immediately re-price the seven identified net-loss subcategories (e.g., fragrances, body moisturizers) to establish and guarantee a minimum positive profit contribution.
 * **Volume-to-Profit Conversion:** Adjust pricing for the high-volume **shampoos and conditioners** subcategory to convert its 0.89% near-zero margin into meaningful profit.
 
-## 2. Strategic Resource Protection
+### 2. Strategic Resource Protection
 
 * **Protect Core Revenue:** **Prioritize** account management and marketing resources toward the **Corporate segment** ($58.81\%$ revenue share) and the **Body care category** (highest revenue generator) to maintain stability.
 * **Leverage High Margin:** **Focus growth efforts** on subcategories with $>35\%$ margins (e.g., Eye shadows and pencils, Lipsticks) to maximize overall profitability and resource efficiency.
