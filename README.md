@@ -1,116 +1,106 @@
-## Project Overview
+# Skincare Sales Project
 
-This project showcases an Exploratory Data Analysis (EDA) performed on a skincare sales dataset. The main goal was to uncover key insights into sales performance, profitability, customer behavior, and geographical market trends. By leveraging SQL queries, this analysis aims to identify strengths, weaknesses, and potential areas for strategic improvement within the business.
+## 1. Project Overview
 
-***
+The analysis covers the complete calendar year **2022** (from 2022-01-01 to 2022-12-31) using the `skin_care_target` data table.
+The product catalog contains **5** major categories, segmented into **17** sub-categories, totaling **3,117** unique product items.
 
-## Tools Used
+---
 
-* **Excel**: For standardizing the data and removing duplicates.
-* **PostgreSQL**: Database system used for storing and querying the data.
+## 2. Key Metrics
 
-***
+The company generated a **Total Revenue** of **$1,770,778** from **13,798 orders**, resulting in a **Total Profit** of **$318,675.4**. The total quantity of units sold was **75,358**.
 
-### General Metrics
+The primary profitability indicators are:
 
-* Total Revenue (2022-2024): $1,770,778
-* Total Profit (Gross): $318,675
-* Total Net Profit After Discounts: $60,004
-* Total Products Sold: 6,388
-* Total Categories Analyzed: 5
-* Total Subcategories Analyzed: 17
+* **Profit Margin %:** **18.0%** (The business retains 18 cents of profit per dollar of revenue).
+* **Avg Weighted Discount %:** **14.6%** (Average price markdown across all sales).
+* **Total Cost of Discounts:** **$258,712.36** (Total potential revenue sacrificed due to promotions).
 
-### Key Findings
+---
 
-- **Customer Drop**: The number of unique customers remained stable from 2022 to 2023 but dropped by over 44% in 2024 (from a yearly count). This indicates a significant issue with customer acquisition and retention.
-``` SQL
--- Customers lost across the years
-WITH yearly_customers AS (
-    SELECT
-        TO_CHAR(st.order_date, 'YYYY') AS years,
-        COUNT(DISTINCT st.customer_id) AS customer_count
-    FROM skincare_target AS st
-    GROUP BY years
-)
-SELECT
-    years, customer_count,
-    LAG(customer_count, 1) OVER (ORDER BY years) AS previous_year_customers,
-    customer_count - LAG(customer_count, 1) OVER (ORDER BY years) AS customer_change
-FROM yearly_customers
-ORDER BY years;
-```
-![Customer Drop](Images/CustomerDrop.png)
+## 3. Sales Analysis Summary
 
-- **Profitability Crisis**: Even before the operational halt, the business was facing a severe profitability crisis.
-1. The analysis showed a direct correlation between high discount rates and poor performance across the years.
-``` SQL
--- YoY revenue, profit, number of products sold, avg_discount, and net profit afer discounts
-SELECT 
-	TO_CHAR(st.order_date, 'YYYY') AS years,
-	SUM(st.sales) AS revenue,
-	SUM(st.profit) AS profit,
-	SUM(st.sales * st.discount_percent) / SUM(st.sales) * 100 AS avg_discount,
-	SUM(st.profit) - SUM(st.sales * st.discount_percent) AS net_profit_after_discount
-FROM skincare_target AS st
-GROUP BY TO_CHAR(st.order_date, 'YYYY')
-ORDER BY TO_CHAR(st.order_date, 'YYYY');
-```
-![Yearly Net Profit](Images/ProfitPerformance.png)
+### Monthly Trends
 
-2. Subcategories in Home and Accessories and Hair care were consistently unprofitable.
-``` SQL
--- Drilling through sub-categories in Home and accesories and hair care category department
-SELECT
-    st.subcategory,
-    SUM(st.sales) AS revenue,
-    SUM(st.profit) AS total_profit,
-    SUM(st.qty) AS qty_sold,
-    SUM(st.sales * st.discount_percent) AS total_discount_amount,
-    SUM(st.profit) - SUM(st.sales * st.discount_percent) AS net_profit_after_discount
-FROM skincare_target AS st
-WHERE st.category = 'Home and Accessories' OR st.subcategory = 'Hair care'
-GROUP BY st.subcategory
-ORDER BY net_profit_after_discount;
-```
-![Subcategories](Images/SubProductCheck.png)  
+![Monthly Performance](<Images/1. Monthly Performance.png>)
 
-3.  Key geographic markets like Turkey, Nigeria, and Indonesia were operating at a significant loss due to unsustainable discounting.
-``` SQL
--- Least profitable countries
-SELECT 
-	st.country, 
-	SUM(st.sales) AS revenue, 
-	SUM(st.profit) AS profit,
-	SUM(st.qty) AS qty_sold,
-	AVG(st.discount_percent) * 100 AS avg_discount_rate_percent,
-	SUM(st.profit) - SUM(st.sales * st.discount_percent) AS net_profit_after_discount
-FROM skincare_target AS st
-GROUP BY st.country
-ORDER BY net_profit_after_discount
-LIMIT 10;
-```
-![Least Profitable Countries](Images/CountryProfit.png)
+* **Peak Revenue** occurred in **December** ($217,674).
+* **Peak Profit** occurred in **June** ($41,810).
+* **Lowest Performance** for both metrics was in **February** (Revenue: $79,783; Profit: $13,584).
+* The data shows a general seasonal uptake in revenue starting in May and maintaining high levels through the second half of the year.
 
-- **Customer Behavior**: Top customers were frequently purchasing these heavily discounted, unprofitable products, meaning the business was losing money on its most valuable customer segment.
-``` SQL
--- Which product category do the top customers buy the most?
-SELECT st.customer_id, st.segment, st.category, SUM(st.qty) AS total_qty_bought
-FROM skincare_target AS st
-WHERE st.customer_id IN ('SP-20620102', 'KN-1645082', 'EH-1376527')
-GROUP BY st.customer_id, st.segment, st.category
-ORDER BY st.customer_id, total_qty_bought DESC;
-```
-***
-![Top Customers frequent purchases](Images/CustomerPurchase.png)
+### Customer Segment Performance
 
-***
+![Customer Segment Distribution](<Images/3. Customer Segment Distribution.png>)
 
-### Conclusion
+The **Corporate** segment is the most significant revenue driver, contributing **58.8%** of total sales. The **Consumer** segment follows at **33.0%**, with the **Self-Employed** segment contributing the remaining **8.2%**.
 
-The business's failure was twofold: a sudden cessation of operations in the second half of 2024, preceded by a severe profitability crisis in the first half of the year. This crisis was driven by a collapsing customer base and a flawed, geographically inconsistent discounting strategy.
+### Geographic Performance (Market)
 
-### Recommendations
+![Global Market Sales](<Images/2. Global Sales by Market.png>)
 
-1.  **Investigate the Operational Halt**: The primary recommendation is to determine the cause of the sudden stop in sales after July 2024.
-2.  **Adjust Pricing Strategy**: If operations were to resume, a complete overhaul of the pricing and discounting strategy would be necessary. This includes eliminating aggressive discounts on unprofitable products, especially in high-loss markets like Turkey and Indonesia.
-3.  **Rebuild Customer Base**: A new strategy would be needed to attract and retain customers, as the business was losing a significant portion of its customer base even before the operational halt.
+The **Asia Pacific** market generates the highest revenue at **$497,173**. Revenue performance is tightly clustered among the middle markets: **LATAM** ($385,098), **USCA** ($375,637), and **Europe** ($373,078). **Africa** is the lowest revenue market ($139,792).
+
+### Product Category Performance
+
+![Product Category Revenue](<Images/4. Product Category Sales.png>)
+
+**Body care** is the dominant product category, generating the highest revenue at **$746,249**. This is followed by Home and Accessories ($332,766) and Hair care ($288,545). **Face care** is the smallest category ($124,432).
+
+## 4.Profitability Summary by Product Subcategory
+
+The analysis of subcategory profitability highlights an **extreme margin disparity** in the product portfolio, ranging from **40.10% profit** to **-18.58% loss**.
+
+### Top & Bottom Margin Performers
+
+![Product Margin %](<Images/5. Product Margin Performance.png>)
+
+Six subcategories consistently achieve a profit margin exceeding **35%**
+
+* Eye shadows and pencils
+* Face moisturizing products
+* Lipsticks
+* Bath oils, bubbles and soaks
+* Hand creams
+* Vitamins and supplements
+
+Seven product subcategories exhibit a **negative profit margin**, requiring immediate corrective action:
+
+* Fragrances: The highest loss driver, with a margin of **-18.58%**.
+* Body Moisturizers
+* Brushes and Applicators
+* Face masks and Exfoliators
+* Accessories
+* Hair colors and Toners
+
+### Low Profit / High Volume
+
+* **Shampoos and Conditioners:** This subcategory generated **$174,777** in sales, but its profit margin is only **0.89%**. This high-volume activity contributes negligible profit.
+
+---
+
+## Conclusion
+
+The analysis indicates the overall profit margin (18.00%) is severely suppressed by systemic issues in pricing control and product mix profitability. The company is successfully generating revenue in key segments but simultaneously losing significant capital due to high-discount leakage and a portfolio containing structurally unprofitable subcategories.
+
+## Recommendations: Profitability and Strategy
+
+## 1. Immediate Profit Recovery (Pricing Control)
+
+* **Discount Leakage Stop:** Eliminate all discounts above 30%. This threshold is non-negotiable as the High Discount bracket currently operates at a **-20.65% net loss**.
+* **Product Profit Floor:** Immediately re-price the seven identified net-loss subcategories (e.g., fragrances, body moisturizers) to establish and guarantee a minimum positive profit contribution.
+* **Volume-to-Profit Conversion:** Adjust pricing for the high-volume **shampoos and conditioners** subcategory to convert its 0.89% near-zero margin into meaningful profit.
+
+## 2. Strategic Resource Protection
+
+* **Protect Core Revenue:** **Prioritize** account management and marketing resources toward the **Corporate segment** ($58.81\%$ revenue share) and the **Body care category** (highest revenue generator) to maintain stability.
+* **Leverage High Margin:** **Focus growth efforts** on subcategories with $>35\%$ margins (e.g., Eye shadows and pencils, Lipsticks) to maximize overall profitability and resource efficiency.
+
+---
+
+## Project Documentation
+
+**Analyst:** *Maria Egbuna*  
+**Tools Used:** *PostgreSQL, Power BI*  
+**Date:** *September 12, 2025*  
